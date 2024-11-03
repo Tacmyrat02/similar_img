@@ -1,0 +1,32 @@
+{% extends 'search/base.html' %}
+
+{% block title %}Çalymdaş_Harytlar{% endblock %}
+
+{% block content %}
+<h1>Similar Products</h1>
+
+{% if similar_products %}
+    <table>
+        <thead>
+            <tr>
+                <th>Harydyň ady</th>
+                <th>Meňzeşlik derejesi</th>
+                <th>Surat</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product, score in similar_products %}
+                <tr>
+                    <td>{{ product.name }}</td>
+                    <td>{{ score|floatformat:2 }}</td>
+                    <td><img src="{{ product.image.url }}" alt="{{ product.name }}" style="width: 100px;"></td>
+                </tr>
+                
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>Siziň gözleýän harydyňyz bizde ýok.</p>
+{% endif %}
+<a href="{% url 'image_search' %}">Go Back</a>
+{% endblock %}

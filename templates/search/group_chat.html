@@ -1,0 +1,44 @@
+<!-- group_chat.html -->
+{% extends 'search/base.html' %}
+
+{% block title %}Group Chat - {{ group.name }}{% endblock %}
+
+{% block content %}
+    <h1>Group Chat: {{ group.name }}</h1>
+
+    <div id="messages" class="message-box">
+        {% for message in messages %}
+            <div class="message">
+                <strong>{{ message.sender.username }}:</strong> {{ message.content }}
+            </div>
+        {% endfor %}
+    </div>
+
+    <form onsubmit="sendMessage(); return false;">
+        <input type="text" id="messageInput" placeholder="Type your message here..." required>
+        <button type="submit">Send</button>
+    </form>
+
+    <script>
+        const groupName = "{{ group.name }}";
+        const ws = new WebSocket(`ws://${window.location.host}/ws/chat/${groupName}/`);
+
+        ws.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+            const messageContainer = document.getElementById('messages');
+            const newMessage = document.createElement('div');
+            newMessage.classList.add('message');
+            newMessage.innerHTML = `<strong>${data.username}:</strong> ${data.message}`;
+            messageContainer.appendChild(newMessage);
+        };
+
+        function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const message = messageInput.value;
+            ws.send(JSON.stringify({
+                'message': message
+            }));
+            messageInput.value = '';
+        }
+    </script>
+{% endblock %}

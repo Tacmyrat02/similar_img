@@ -1,0 +1,13 @@
+{% extends 'search/base.html' %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h2>Biziň Sahypamyza Agza boluň!</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Agza bol!</button>
+        </form>
+        <p>Siz eýýäm agza bolduňyzmy? <a href="{% url 'login' %}">Login</a>.</p>
+    </div>
+{% endblock %}

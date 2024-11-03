@@ -1,0 +1,17 @@
+<!-- create_group.html -->
+{% extends 'search/base.html' %}
+
+{% block title %}Create Group{% endblock %}
+
+{% block content %}
+    <h1>Create a New Group</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        <label for="name">Group Name:</label>
+        <input type="text" id="name" name="name" required>
+        <button type="submit">Create Group</button>
+    </form>
+
+    <a href="{% url 'product_list' %}">Back to Product List</a>
+{% endblock %}

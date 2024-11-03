@@ -1,0 +1,57 @@
+{% extends 'search/base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>Surat Arkaly Haryt Gözlegi</h1>
+    <p>Harydyň suratyny ýükle ýa-da kameradan surata al.</p>
+
+    <form id="image-form" action="{% url 'image_search' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="image">Suraty saýla:</label>
+            <input type="file" class="form-control" id="image" name="image">
+        </div>
+        
+        <!-- Camera and capture button -->
+        <div class="camera">
+            <video id="video" width="320" height="240" autoplay></video>
+            <button type="button" id="capture-btn" class="btn btn-secondary">Surata Al</button>
+            <canvas id="canvas" style="display: none;"></canvas>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Gözle</button>
+    </form>
+</div>
+
+<script>
+    // Access the camera
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const captureBtn = document.getElementById('capture-btn');
+
+    // Get camera stream
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+            video.srcObject = stream;
+        })
+        .catch(error => {
+            console.error('Kamera ýalňyşlygy:', error);
+        });
+
+    // Capture image from the video
+    captureBtn.addEventListener('click', () => {
+        const context = canvas.getContext('2d');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        
+        // Convert canvas to data URL and add to form as a hidden input
+        canvas.toBlob(blob => {
+            const fileInput = new File([blob], "captured_image.png", { type: "image/png" });
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(fileInput);
+            document.getElementById('image').files = dataTransfer.files;
+        });
+    });
+</script>
+{% endblock %}

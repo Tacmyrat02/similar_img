@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Similar Products</h1>
+
+    {% if products %}
+        <ul>
+            {% for product in products %}
+                <li>
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" style="width: 100px; height: auto;">
+                    <p>{{ product.name }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No similar products found.</p>
+    {% endif %}
+{% endblock %}
